@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthOS Pro — AI-Powered Clinical Nutrition</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+        rel="stylesheet">
+    <script>
+        if (!localStorage.getItem('healthos_token')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
+                <div class="logo" style="margin-bottom: 0;">
+                    <div class="logo-dot"></div>
+                    <span>HealthOS Pro</span>
+                </div>
+                <button class="btn-secondary logout-btn" onclick="logout()">Logout</button>
+            </div>
+            <h1>Clinical Nutrition &<br><span>Smart Meal Planner</span></h1>
+            <p class="subtitle">Personalized clinical insights · Evidence-based protocols · Condition-specific guidance</p>
+            <div class="model-strip">
+                <div class="mbadge green">🧬 Precision Nutrition</div>
+                <div class="mbadge blue">🔬 Nutrient Analysis</div>
+                <div class="mbadge amber">📊 Evidence-Based Guidelines</div>
+            </div>
+        </header>
+
+        <div class="progress-wrap">
+            <div class="progress-bar">
+                <div class="progress-fill" id="pFill"></div>
+            </div>
+            <div class="progress-label" id="pLabel">Step 1 of 4</div>
+        </div>
+
+        <div class="api-settings" style="display: none;">
+            <span class="api-label">AI Model:</span>
+            <select id="aiProvider" class="api-select">
+                <option value="openrouter">OpenRouter (Free / Gemini)</option>
+                <option value="mock">Smart Mock AI (Offline)</option>
+            </select>
+            <input type="text" id="apiKey" placeholder="API Key (optional - for OpenRouter)" class="api-input">
+            <button class="btn-secondary" onclick="saveApiSettings()">Save</button>
+            <span class="api-badge" id="apiStatus">AI Ready</span>
+        </div>
+
+        <!-- ==================== Step 1 ==================== -->
+        <div class="step active" id="step1">
+            <div class="step-tag">Step 1 — Physical Stats</div>
+            <div class="step-title">Your basic measurements</div>
+            <div class="field-row">
+                <div class="field-group">
+                    <div class="field-label">Age</div>
+                    <div class="input-wrap">
+                        <input type="number" id="age" placeholder="e.g. 28" min="1" max="120">
+                        <span class="unit">yrs</span>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Weight</div>
+                    <div class="input-wrap">
+                        <input type="number" id="weight" placeholder="e.g. 70" min="1" max="300">
+                        <span class="unit">kg</span>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Height</div>
+                    <div class="input-wrap">
+                        <input type="number" id="height" placeholder="e.g. 170" min="50" max="250">
+                        <span class="unit">cm</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redesigned Gender Selection -->
+            <div class="field-group">
+                <div class="field-label">Biological Sex</div>
+                <div class="gender-grid">
+                    <div class="gender-card male-card" onclick="pickGender('Male', this)">
+                        <div class="gender-check-badge">✓</div>
+                        <div class="gender-icon">♂</div>
+                        <div class="gender-name">Male</div>
+                    </div>
+                    <div class="gender-card female-card" onclick="pickGender('Female', this)">
+                        <div class="gender-check-badge">✓</div>
+                        <div class="gender-icon">♀</div>
+                        <div class="gender-name">Female</div>
+                    </div>
+                    <div class="gender-card other-card" onclick="pickGender('Other', this)">
+                        <div class="gender-check-badge">✓</div>
+                        <div class="gender-icon">⚧</div>
+                        <div class="gender-name">Other</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="e1" class="error-container"></div>
+            <div class="nav-row">
+                <div></div>
+                <button class="btn btn-primary" onclick="go(1,2)">Continue →</button>
+            </div>
+        </div>
+
+        <!-- ==================== Step 2 ==================== -->
+        <div class="step" id="step2">
+            <div class="step-tag">Step 2 — Activity Level</div>
+            <div class="step-title">How active are you?</div>
+            <div class="grid-2" id="actGrid">
+                <div class="choice-card" data-val="Sedentary" onclick="pick('activity',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🛋️</div>
+                    <div class="choice-name">Sedentary</div>
+                    <div class="choice-desc">Desk job, little or no exercise</div>
+                </div>
+                <div class="choice-card" data-val="Lightly Active" onclick="pick('activity',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🚶</div>
+                    <div class="choice-name">Lightly Active</div>
+                    <div class="choice-desc">Light exercise 1–3 days/week</div>
+                </div>
+                <div class="choice-card" data-val="Moderately Active" onclick="pick('activity',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🏃</div>
+                    <div class="choice-name">Moderately Active</div>
+                    <div class="choice-desc">Moderate exercise 3–5 days/week</div>
+                </div>
+                <div class="choice-card" data-val="Very Active" onclick="pick('activity',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🏋️</div>
+                    <div class="choice-name">Very Active</div>
+                    <div class="choice-desc">Hard exercise 6–7 days/week</div>
+                </div>
+                <div class="choice-card" data-val="Extremely Active" onclick="pick('activity',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🔥</div>
+                    <div class="choice-name">Extremely Active</div>
+                    <div class="choice-desc">Physical job or twice-daily training</div>
+                </div>
+            </div>
+            <div id="e2" class="error-container"></div>
+            <div class="nav-row">
+                <button class="btn btn-ghost" onclick="go(2,1)">← Back</button>
+                <button class="btn btn-primary" onclick="go(2,3)">Continue →</button>
+            </div>
+        </div>
+
+        <!-- ==================== Step 3 ==================== -->
+        <div class="step" id="step3">
+            <div class="step-tag">Step 3 — Dietary Preference</div>
+            <div class="step-title">What do you eat?</div>
+            <div class="grid-3" id="dietGrid">
+                <div class="choice-card" data-val="Omnivore" onclick="pick('diet',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🥗</div>
+                    <div class="choice-name">Omnivore</div>
+                    <div class="choice-desc">Everything incl. meat</div>
+                </div>
+                <div class="choice-card" data-val="Vegetarian" onclick="pick('diet',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🥦</div>
+                    <div class="choice-name">Vegetarian</div>
+                    <div class="choice-desc">No meat, includes dairy</div>
+                </div>
+                <div class="choice-card" data-val="Vegan" onclick="pick('diet',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🌱</div>
+                    <div class="choice-name">Vegan</div>
+                    <div class="choice-desc">Plant-based only</div>
+                </div>
+                <div class="choice-card" data-val="Pescatarian" onclick="pick('diet',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🐟</div>
+                    <div class="choice-name">Pescatarian</div>
+                    <div class="choice-desc">Vegetarian + seafood</div>
+                </div>
+                <div class="choice-card" data-val="Keto" onclick="pick('diet',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🥑</div>
+                    <div class="choice-name">Keto</div>
+                    <div class="choice-desc">High fat, very low carb</div>
+                </div>
+                <div class="choice-card" data-val="Gluten-Free" onclick="pick('diet',this)">
+                    <div class="check-badge">✓</div>
+                    <div class="choice-icon">🌾</div>
+                    <div class="choice-name">Gluten-Free</div>
+                    <div class="choice-desc">No gluten grains</div>
+                </div>
+            </div>
+            <div id="e3" class="error-container"></div>
+            <div class="nav-row">
+                <button class="btn btn-ghost" onclick="go(3,2)">← Back</button>
+                <button class="btn btn-primary" onclick="go(3,4)">Continue →</button>
+            </div>
+        </div>
+
+        <!-- ==================== Step 4 ==================== -->
+        <div class="step" id="step4">
+            <div class="step-tag">Step 4 — Health Flags</div>
+            <div class="step-title">Allergies & chronic conditions</div>
+            <div class="field-group">
+                <div class="field-label">Food Allergies</div>
+                <div class="tag-grid" id="allergyGrid">
+                    <div class="tag-chip danger" data-val="Nuts" onclick="tog('allergy',this)">Nuts</div>
+                    <div class="tag-chip danger" data-val="Dairy" onclick="tog('allergy',this)">Dairy</div>
+                    <div class="tag-chip danger" data-val="Gluten" onclick="tog('allergy',this)">Gluten</div>
+                    <div class="tag-chip danger" data-val="Shellfish" onclick="tog('allergy',this)">Shellfish</div>
+                    <div class="tag-chip danger" data-val="Eggs" onclick="tog('allergy',this)">Eggs</div>
+                    <div class="tag-chip danger" data-val="Soy" onclick="tog('allergy',this)">Soy</div>
+                    <div class="tag-chip danger" data-val="None" onclick="tog('allergy',this)">✓ None</div>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="field-group">
+                <div class="field-label">Chronic Conditions</div>
+                <div class="tag-grid" id="condGrid">
+                    <div class="tag-chip" data-val="Type 2 Diabetes" onclick="tog('condition',this)">Type 2 Diabetes
+                    </div>
+                    <div class="tag-chip" data-val="Hypertension" onclick="tog('condition',this)">Hypertension</div>
+                    <div class="tag-chip" data-val="High Cholesterol" onclick="tog('condition',this)">High
+                        Cholesterol</div>
+                    <div class="tag-chip" data-val="Thyroid Disorder" onclick="tog('condition',this)">Thyroid
+                        Disorder</div>
+                    <div class="tag-chip" data-val="PCOS" onclick="tog('condition',this)">PCOS</div>
+                    <div class="tag-chip" data-val="IBS" onclick="tog('condition',this)">IBS</div>
+                    <div class="tag-chip" data-val="Asthma" onclick="tog('condition',this)">Asthma</div>
+                    <div class="tag-chip" data-val="Arthritis" onclick="tog('condition',this)">Arthritis</div>
+                    <div class="tag-chip" data-val="CKD" onclick="tog('condition',this)">Chronic Kidney Disease</div>
+                    <div class="tag-chip" data-val="Celiac" onclick="tog('condition',this)">Celiac Disease</div>
+                    <div class="tag-chip" data-val="Crohns" onclick="tog('condition',this)">Crohn's Disease</div>
+                    <div class="tag-chip" data-val="Osteoporosis" onclick="tog('condition',this)">Osteoporosis</div>
+                    <div class="tag-chip" data-val="None" onclick="tog('condition',this)">✓ None</div>
+                </div>
+            </div>
+            <div id="e4" class="error-container"></div>
+            <div class="nav-row">
+                <button class="btn btn-ghost" onclick="go(4,3)">← Back</button>
+                <button class="btn btn-primary" onclick="go(4,5)">Generate My Plan</button>
+            </div>
+        </div>
+
+        <!-- ==================== Step 5: Results ==================== -->
+        <div class="step" id="step5">
+            <div class="step-tag">✓ Your Personalised Plan</div>
+            <div class="step-title">Health Profile & Clinical Insights</div>
+            <div class="engine-strip">
+                <span><strong>☤ Rule Engine:</strong> Evidence-based limits · <strong>Condition Protocols:</strong>
+                    Active · <strong>Indian Food DB:</strong> Enabled</span>
+            </div>
+
+            <!-- Stats Card -->
+            <div class="result-card">
+                <div class="result-label">Physical Stats & Targets</div>
+                <div id="physRows"></div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="result-card chart-card">
+                    <div class="result-label">Macro Breakdown</div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;">
+                        <canvas id="macroChart" width="200" height="200"></canvas>
+                        <div class="macro-legend">
+                            <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span>Carbs
+                            </div>
+                            <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span>Protein
+                            </div>
+                            <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span>Fat
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card chart-card">
+                    <div class="result-label">Weekly Calorie Estimate</div>
+                    <canvas id="calorieChart" width="380" height="160" style="max-width:100%;"></canvas>
+                </div>
+            </div>
+
+            <!-- Nutrients -->
+            <div class="result-card">
+                <div class="result-label">Daily Nutrient Breakdown</div>
+                <div class="nutrient-grid" id="nutGrid"></div>
+            </div>
+
+            <!-- Condition Banners -->
+            <div id="condBanners"></div>
+
+            <!-- Meal Plan Tabs -->
+            <div class="result-card">
+                <div class="result-label">Meal Plan (Incl. Indian Foods)</div>
+                <div class="tab-bar">
+                    <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">Daily Plan</button>
+                    <button class="tab-btn" data-tab="weekly" onclick="switchTab('weekly')">Weekly Overview</button>
+                </div>
+                <div class="tab-panel active" id="tab-daily"></div>
+                <div class="tab-panel" id="tab-weekly"></div>
+            </div>
+
+            <!-- Clinical Insights Section -->
+            <div class="ai-section">
+                <div class="result-label" style="color:var(--accent)">
+                    ☤ Clinical Nutrition Insights
+                    <span id="aiModelBadge" class="ai-badge-small">Advanced Protocol</span>
+                </div>
+                <div class="ai-text" id="aiText">
+                    <div class="loading-spinner">
+                        <div class="dot-spin"></div>
+                        <span>Generating personalized clinical protocol...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-row">
+                <button class="btn btn-ghost" onclick="startOver()">← Start Over</button>
+                <button class="btn btn-primary" onclick="window.print()">Save / Print</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
