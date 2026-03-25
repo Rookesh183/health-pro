@@ -1,53 +1,88 @@
-# HealthOS Pro - AI-Powered Clinical Nutrition & Meal Planner
+# HealthOS Pro — Clinical Nutrition & Meal Planner
 
-A comprehensive health and nutrition application that provides personalized dietary recommendations, meal planning, and AI-powered clinical insights.
+A clinical nutrition app with BMI/TDEE calculations, condition-specific dietary protocols, meal planning (Indian + global), and nutrient tracking.
 
-## Quick Start
+---
 
-### Frontend Only (No Installation Required)
-1. Open `index.html` in any modern web browser
-2. Enter your health information
-3. Get personalized nutrition recommendations
+## 🚀 Quick Start (No Installation Needed)
 
-### With Python Backend (Optional)
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/Rookesh183/health-pro.git
+   cd health-pro
+   ```
+
+2. **Open the app** — just open `frontend/login.html` in any modern browser (Chrome, Edge, Firefox).
+
+3. **Log in** using the built-in demo account:
+   | Field    | Value               |
+   |----------|---------------------|
+   | Email    | `user@example.com`  |
+   | Password | `password123`       |
+
+   > Or click **Sign up** to create your own account (stored locally in your browser).
+
+---
+
+## 📁 Project Structure
+
+```
+health-pro/
+├── frontend/
+│   ├── index.html      # Main app (step-by-step planner)
+│   ├── login.html      # Login page
+│   ├── signup.html     # Registration page
+│   ├── styles.css      # All styles
+│   ├── script.js       # App logic (BMI, TDEE, meals, charts)
+│   └── login.js        # Auth logic
+└── backend/
+    ├── app.py          # Flask backend (optional)
+    └── requirements.txt
+```
+
+---
+
+## ⚙️ Optional: Run with Flask Backend
+
+Only needed if you want server-side login. The frontend works **100% offline** without it.
+
 ```bash
+cd backend
 pip install -r requirements.txt
 python app.py
 ```
 
-## Features
+Backend runs on `http://localhost:5000` and also serves the frontend at `/`.
 
-- **Personalized Nutrition**: BMI, TDEE, and custom nutrient targets
-- **AI-Powered Insights**: Real AI recommendations (OpenRouter API)
-- **Condition-Specific Protocols**: Diabetes, Hypertension, Cholesterol, PCOS, IBS
-- **Meal Planning**: Daily and weekly meal plans
-- **Export Reports**: Save your health plan
+---
 
-## AI Configuration
+## 🔑 Authentication
 
-1. Get a free API key from [OpenRouter](https://openrouter.ai)
-2. Enter it in the settings panel
-3. Select "OpenRouter" as the AI provider
+- Auth is **localStorage-based** — accounts are saved in the browser on each device.
+- The demo account (`user@example.com` / `password123`) works on **any device** without sign-up.
+- Signing up on one machine does **not** carry over to another machine (by design — no server).
 
-## Project Structure
+---
 
-```
-healthos-app/
-├── index.html      # Main HTML file
-├── styles.css      # All CSS styles
-├── script.js       # All JavaScript logic
-├── app.py          # Python backend (optional)
-├── requirements.txt # Python dependencies
-└── README.md       # Documentation
-```
+## ✨ Features
 
-## Technologies
+- BMI, TDEE & macro calculation
+- Condition-specific protocols (Diabetes, Hypertension, PCOS, CKD, etc.)
+- Daily & weekly meal plans (Indian + global foods)
+- Nutrient breakdown with animated charts
+- Optional AI insights via [OpenRouter](https://openrouter.ai) (free API key)
 
-- HTML5, CSS3, JavaScript (ES6)
-- Google Fonts (Syne, DM Sans)
-- OpenRouter AI API
-- Flask (optional backend)
+---
 
-## License
+## 🛠 Technologies
+
+- HTML5 · CSS3 · Vanilla JavaScript (ES6)
+- Canvas API (charts)
+- Flask + Flask-CORS (optional backend)
+- Google Fonts (Outfit, Inter)
+
+---
+
+## 📄 License
 
 MIT License
