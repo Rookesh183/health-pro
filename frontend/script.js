@@ -107,7 +107,6 @@ function go(from, to) {
     if (from === 2 && !S.activity) { showError('e2', 'Select activity level.'); return; }
     if (from === 3 && !S.diet) { showError('e3', 'Select dietary preference.'); return; }
     if (from === 4) {
-        if (!S.allergies.length) { showError('e4', 'Select at least one allergy option.'); return; }
         if (!S.conditions.length) { showError('e4', 'Select at least one condition option.'); return; }
         showError('e4', '');
     }
@@ -266,12 +265,12 @@ function buildWeeklyPlan(cal) {
         const meals = getMealPlan();
         const rowClass = i % 2 === 0 ? 'week-row-even' : '';
         rows += `<tr class="${rowClass}">
-            <td style="color:var(--accent);font-weight:600;">${days[i]}</td>
-            <td>${meals.bf}</td>
-            <td>${meals.lu}</td>
-            <td>${meals.sn}</td>
-            <td>${meals.dn}</td>
-            <td style="color:var(--accent2);font-weight:600;">${Math.round(cal)} kcal</td>
+            <td style="color:var(--accent);font-weight:700;">${days[i]}</td>
+            <td style="color:#1e293b;font-weight:500;">${meals.bf}</td>
+            <td style="color:#1e293b;font-weight:500;">${meals.lu}</td>
+            <td style="color:#1e293b;font-weight:500;">${meals.sn}</td>
+            <td style="color:#1e293b;font-weight:500;">${meals.dn}</td>
+            <td style="color:var(--accent2);font-weight:700;">${Math.round(cal)} kcal</td>
         </tr>`;
     }
     return `<div style="overflow-x:auto;">

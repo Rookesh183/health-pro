@@ -1169,3 +1169,105 @@ table.week-table {
     font-size: 1.6rem;
     margin-bottom: 8px;
 }
+
+/* =========================================
+   WEEKLY PLAN TABLE
+   ========================================= */
+.week-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.week-table thead tr {
+    background: linear-gradient(135deg, var(--accent), #10b981);
+}
+
+.week-table thead th {
+    padding: 12px 14px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    text-align: left;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.week-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+}
+
+.week-table tbody tr:hover {
+    background: rgba(5, 150, 105, 0.06) !important;
+}
+
+.week-table tbody .week-row-even {
+    background: rgba(241, 245, 249, 0.7);
+}
+
+.week-table td {
+    padding: 11px 14px;
+    vertical-align: middle;
+    line-height: 1.4;
+    color: #1e293b;
+}
+
+/* =========================================
+   PRINT / SAVE AS PDF STYLES
+   ========================================= */
+@media print {
+    /* Hide all UI chrome */
+    .header,
+    .progress-wrap,
+    .api-settings,
+    .nav-row,
+    .tab-bar,
+    .step-tag,
+    .engine-strip,
+    .logout-btn {
+        display: none !important;
+    }
+
+    /* Remove page padding */
+    .app {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+
+    /* Force white background */
+    body, .app {
+        background: #fff !important;
+        color: #111 !important;
+    }
+
+    /* Show all tab panels so full meal plan prints */
+    .tab-panel {
+        display: block !important;
+    }
+
+    /* Prevent cards from breaking across pages */
+    .result-card,
+    .condition-banner,
+    .ai-section,
+    .day-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    /* Make text readable on white */
+    .result-row,
+    .ai-text,
+    .meal-name,
+    .meal-time {
+        color: #333 !important;
+    }
+
+    /* Nutrient bar backgrounds visible on white */
+    .nutrient-bar-bg {
+        background: #eee !important;
+    }
+}
