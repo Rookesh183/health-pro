@@ -2,10 +2,13 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
 
-app = Flask(__name__, static_folder='../frontend')
+app = Flask(__name__)
 CORS(app)
 
-# Dummy user data for demonstration
+# Resolve the absolute path to the frontend folder
+FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
+
+# In-memory user store (demo only)
 users = {
     "user@example.com": {
         "password": "password123",
@@ -13,32 +16,43 @@ users = {
     }
 }
 
-@app.route('/', defaults={'path': 'index.html'})
-@app.route('/<path:path>')
-def serve_frontend(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
-
+# ─── API: Login ────────────────────────────────────────────────
 @app.route('/api/login', methods=['POST'])
 def login():
-    data = request.json
-    email = data.get('email')
-    password = data.get('password')
+    data = request.get_json(silent=True) or {}
+    email    = data.get('email', '').strip().lower()
+    password = data.get('password', '')
 
-    if email in users and users[email]['password'] == password:
+    user = users.get(email)
+    if user and user['password'] == password:
         return jsonify({
             "success": True,
             "token": "fake-jwt-token-for-demo",
-            "user": {
-                "name": users[email]['name'],
-                "email": email
-            }
+            "user": {"name": user['name'], "email": email}
         })
-    else:
-        return jsonify({"success": False, "message": "Invalid email or password"}), 401
+    return jsonify({"success": False, "message": "Invalid email or password"}), 401
 
 
+# ─── Serve frontend static files ───────────────────────────────
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    # Skip — API routes are handled above
+    if path.startswith('api/'):
+        return jsonify({"error": "Not found"}), 404
+
+    # Build the full file path safely
+    target = os.path.join(FRONTEND_DIR, path) if path else ''
+
+    # If the path points to an existing FILE, serve it
+    if path and os.path.isfile(target):
+        return send_from_directory(FRONTEND_DIR, path)
+
+    # Default: serve login.html (so the app always loads)
+    return send_from_directory(FRONTEND_DIR, 'login.html')
+
+
+# ─── Run ────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    print(f"Serving frontend from: {FRONTEND_DIR}")
+    app.run(host='0.0.0.0', port=5000, debug=True)
