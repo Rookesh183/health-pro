@@ -1146,10 +1146,10 @@ table.week-table {
     text-align: center;
 }
 
-.breakfast-badge { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
-.lunch-badge { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
-.snack-badge { background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
-.dinner-badge { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+.breakfast-badge { background: #0f172a; color: #ffffff; }
+.lunch-badge { background: #0f172a; color: #ffffff; }
+.snack-badge { background: #0f172a; color: #ffffff; }
+.dinner-badge { background: #0f172a; color: #ffffff; }
 
 .meal-info { flex: 1; }
 .meal-name { font-size: 0.95rem; font-weight: 500; color: #fff; }
@@ -1339,4 +1339,112 @@ table.week-table {
     .nutrient-bar-bg {
         background: #eee !important;
     }
+}
+
+/* =========================================
+   TODAY'S RECOMMENDED MEALS HIGHLIGHTING
+   ========================================= */
+
+.day-card {
+    background: #ffffff;
+    border: 2px solid #bbf7d0;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 25px rgba(5, 150, 105, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.day-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #059669, #34d399);
+}
+
+.day-header-label {
+    font-family: 'Outfit';
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #064e3b;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.day-header-label::after {
+    content: '🏆';
+    font-size: 1.2rem;
+}
+
+.meal-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.meal-row:last-child {
+    border-bottom: none;
+}
+
+.meal-time-badge {
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    min-width: 110px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.breakfast-badge { background: #0f172a !important; color: #ffffff !important; }
+.lunch-badge { background: #0f172a !important; color: #ffffff !important; }
+.snack-badge { background: #0f172a !important; color: #ffffff !important; }
+.dinner-badge { background: #0f172a !important; color: #ffffff !important; }
+
+.meal-info {
+    flex: 1;
+}
+
+.meal-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.meal-name {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.meal-cal {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.swap-btn {
+    background: #f1f5f9;
+    border: none;
+    padding: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.swap-btn:hover {
+    background: #e2e8f0;
+    transform: rotate(15deg);
 }
