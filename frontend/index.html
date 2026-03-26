@@ -9,11 +9,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap"
         rel="stylesheet">
-    <script>
-        if (!localStorage.getItem('healthos_token')) {
-            window.location.href = 'login.html';
-        }
-    </script>
 </head>
 
 <body>
@@ -24,7 +19,6 @@
                     <div class="logo-dot"></div>
                     <span>HealthOS Pro</span>
                 </div>
-                <button class="btn-secondary logout-btn" onclick="logout()">Logout</button>
             </div>
             <h1>Clinical Nutrition &<br><span>Smart Meal Planner</span></h1>
             <p class="subtitle">Personalized clinical insights · Evidence-based protocols · Condition-specific guidance</p>
@@ -233,20 +227,22 @@
             <div class="field-group">
                 <div class="field-label">Chronic Conditions</div>
                 <div class="tag-grid" id="condGrid">
-                    <div class="tag-chip" data-val="Type 2 Diabetes" onclick="tog('condition',this)">Type 2 Diabetes
-                    </div>
+                    <div class="tag-chip" data-val="Type 2 Diabetes" onclick="tog('condition',this)">Diabetes</div>
                     <div class="tag-chip" data-val="Hypertension" onclick="tog('condition',this)">Hypertension</div>
-                    <div class="tag-chip" data-val="High Cholesterol" onclick="tog('condition',this)">High
-                        Cholesterol</div>
-                    <div class="tag-chip" data-val="Thyroid Disorder" onclick="tog('condition',this)">Thyroid
-                        Disorder</div>
+                    <div class="tag-chip" data-val="High Cholesterol" onclick="tog('condition',this)">Cholesterol</div>
+                    <div class="tag-chip" data-val="Thyroid Disorder" onclick="tog('condition',this)">Thyroid</div>
+                    <div class="tag-chip" data-val="GERD" onclick="tog('condition',this)">GERD</div>
+                    <div class="tag-chip" data-val="Fatty Liver" onclick="tog('condition',this)">Fatty Liver</div>
+                    <div class="tag-chip" data-val="Gout" onclick="tog('condition',this)">Gout</div>
+                    <div class="tag-chip" data-val="Hypothyroidism" onclick="tog('condition',this)">Hypothyroidism</div>
+                    <div class="tag-chip" data-val="Anaemia" onclick="tog('condition',this)">Anaemia</div>
                     <div class="tag-chip" data-val="PCOS" onclick="tog('condition',this)">PCOS</div>
                     <div class="tag-chip" data-val="IBS" onclick="tog('condition',this)">IBS</div>
                     <div class="tag-chip" data-val="Asthma" onclick="tog('condition',this)">Asthma</div>
                     <div class="tag-chip" data-val="Arthritis" onclick="tog('condition',this)">Arthritis</div>
-                    <div class="tag-chip" data-val="CKD" onclick="tog('condition',this)">Chronic Kidney Disease</div>
-                    <div class="tag-chip" data-val="Celiac" onclick="tog('condition',this)">Celiac Disease</div>
-                    <div class="tag-chip" data-val="Crohns" onclick="tog('condition',this)">Crohn's Disease</div>
+                    <div class="tag-chip" data-val="CKD" onclick="tog('condition',this)">CKD</div>
+                    <div class="tag-chip" data-val="Celiac" onclick="tog('condition',this)">Celiac</div>
+                    <div class="tag-chip" data-val="Crohns" onclick="tog('condition',this)">Crohn's</div>
                     <div class="tag-chip" data-val="Osteoporosis" onclick="tog('condition',this)">Osteoporosis</div>
                     <div class="tag-chip" data-val="None" onclick="tog('condition',this)">✓ None</div>
                 </div>

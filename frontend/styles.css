@@ -1215,6 +1215,43 @@ table.week-table {
 }
 
 /* =========================================
+   INTERACTIVE ELEMENTS
+   ========================================= */
+
+/* Swap buttons */
+.swap-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.swap-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+.swap-btn-mini {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    padding: 2px;
+}
+.swap-btn-mini:hover { opacity: 1; }
+
+/* Meal layout updates */
+.meal-name-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; }
+/* Meal layout updates */
+.meal-name-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; }
+
+/* Week Table cell update */
+.week-meal-cell { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-width: 120px; }
+
+/* =========================================
    PRINT / SAVE AS PDF STYLES
    ========================================= */
 @media print {
@@ -1226,7 +1263,9 @@ table.week-table {
     .tab-bar,
     .step-tag,
     .engine-strip,
-    .logout-btn {
+    .logout-btn,
+    .swap-btn,
+    .swap-btn-mini {
         display: none !important;
     }
 
@@ -1245,25 +1284,55 @@ table.week-table {
     /* Show all tab panels so full meal plan prints */
     .tab-panel {
         display: block !important;
+        margin-bottom: 40px;
+        page-break-after: auto;
+    }
+    
+    #tab-daily::before { content: "Daily Recommended Meal Plan"; display: block; font-family: 'Outfit'; font-weight: 700; font-size: 1.4rem; margin-bottom: 20px; color: var(--accent); }
+    #tab-weekly::before { content: "Weekly Meal Overview"; display: block; font-family: 'Outfit'; font-weight: 700; font-size: 1.4rem; margin-top: 40px; margin-bottom: 20px; color: var(--accent); page-break-before: always; }
+
+    /* Branded Header/Footer */
+    .app::before {
+        content: "HealthOS Pro — Personalized Clinical Nutrition Architecture";
+        display: block;
+        text-align: center;
+        font-family: 'Outfit';
+        font-weight: 700;
+        font-size: 1rem;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--accent);
+        color: var(--accent);
+    }
+    .app::after {
+        content: "Clinical Support Document — generated on " attr(data-date) " — visit healthos.pro for updates";
+        display: block;
+        text-align: center;
+        font-size: 0.75rem;
+        color: #666;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
     }
 
     /* Prevent cards from breaking across pages */
-    .result-card,
-    .condition-banner,
-    .ai-section,
     .day-card {
         break-inside: avoid;
         page-break-inside: avoid;
         box-shadow: none !important;
-        border: 1px solid #ddd !important;
+        border: 1px solid #eee !important;
+        background: #fafafa !important;
+        color: #222 !important;
     }
 
     /* Make text readable on white */
     .result-row,
     .ai-text,
     .meal-name,
-    .meal-time {
-        color: #333 !important;
+    .meal-time,
+    .choice-name,
+    .week-table td {
+        color: #222 !important;
     }
 
     /* Nutrient bar backgrounds visible on white */

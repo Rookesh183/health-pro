@@ -219,11 +219,26 @@ function calculateNutrients(cal) {
 function getMealPlan() {
     const db = MEAL_DB[S.diet] || MEAL_DB.Omnivore;
     return {
+        id: Math.random().toString(36).substr(2, 9),
         bf: db.bf[Math.floor(Math.random() * db.bf.length)],
         lu: db.lu[Math.floor(Math.random() * db.lu.length)],
         dn: db.dn[Math.floor(Math.random() * db.dn.length)],
         sn: db.sn[Math.floor(Math.random() * db.sn.length)]
     };
+}
+
+function swapMeal(type, elId) {
+    const db = MEAL_DB[S.diet] || MEAL_DB.Omnivore;
+    const meals = db[type];
+    const newMeal = meals[Math.floor(Math.random() * meals.length)];
+    const el = document.getElementById(elId);
+    if (el) {
+        el.textContent = newMeal;
+        // If it's the daily view, we might need to update calorie eaten progress if checked
+        if (type === 'bf' || type === 'lu' || type === 'dn' || type === 'sn') {
+             // Just updating text is enough for now as the kcal is fixed per slot in this simplified version
+        }
+    }
 }
 
 function buildDailyPlan(cal) {
@@ -237,19 +252,43 @@ function buildDailyPlan(cal) {
         <div class="day-header-label">Today's Recommended Meals</div>
         <div class="meal-row">
             <div class="meal-time-badge breakfast-badge">🌅 Breakfast</div>
-            <div class="meal-info"><div class="meal-name">${meals.bf}</div><div class="meal-cal">${bfCals} kcal</div></div>
+            <div class="meal-info">
+                <div class="meal-name-row">
+                    <div class="meal-name" id="meal-bf">${meals.bf}</div>
+                    <button class="swap-btn" onclick="swapMeal('bf', 'meal-bf')">🔄</button>
+                </div>
+                <div class="meal-cal">${bfCals} kcal</div>
+            </div>
         </div>
         <div class="meal-row">
             <div class="meal-time-badge lunch-badge">☀️ Lunch</div>
-            <div class="meal-info"><div class="meal-name">${meals.lu}</div><div class="meal-cal">${luCals} kcal</div></div>
+            <div class="meal-info">
+                <div class="meal-name-row">
+                    <div class="meal-name" id="meal-lu">${meals.lu}</div>
+                    <button class="swap-btn" onclick="swapMeal('lu', 'meal-lu')">🔄</button>
+                </div>
+                <div class="meal-cal">${luCals} kcal</div>
+            </div>
         </div>
         <div class="meal-row">
             <div class="meal-time-badge snack-badge">🍵 Snack</div>
-            <div class="meal-info"><div class="meal-name">${meals.sn}</div><div class="meal-cal">${snCals} kcal</div></div>
+            <div class="meal-info">
+                <div class="meal-name-row">
+                    <div class="meal-name" id="meal-sn">${meals.sn}</div>
+                    <button class="swap-btn" onclick="swapMeal('sn', 'meal-sn')">🔄</button>
+                </div>
+                <div class="meal-cal">${snCals} kcal</div>
+            </div>
         </div>
         <div class="meal-row" style="border-bottom:none;">
             <div class="meal-time-badge dinner-badge">🌙 Dinner</div>
-            <div class="meal-info"><div class="meal-name">${meals.dn}</div><div class="meal-cal">${dnCals} kcal</div></div>
+            <div class="meal-info">
+                <div class="meal-name-row">
+                    <div class="meal-name" id="meal-dn">${meals.dn}</div>
+                    <button class="swap-btn" onclick="swapMeal('dn', 'meal-dn')">🔄</button>
+                </div>
+                <div class="meal-cal">${dnCals} kcal</div>
+            </div>
         </div>
         <div style="margin-top:16px;border-top:1px dashed rgba(255,255,255,0.1);padding-top:16px;display:flex;justify-content:space-between;align-items:center;">
             <span style="color:var(--text-muted);font-size:0.85rem;">Total Daily Intake</span>
@@ -266,10 +305,30 @@ function buildWeeklyPlan(cal) {
         const rowClass = i % 2 === 0 ? 'week-row-even' : '';
         rows += `<tr class="${rowClass}">
             <td style="color:var(--accent);font-weight:700;">${days[i]}</td>
-            <td style="color:#1e293b;font-weight:500;">${meals.bf}</td>
-            <td style="color:#1e293b;font-weight:500;">${meals.lu}</td>
-            <td style="color:#1e293b;font-weight:500;">${meals.sn}</td>
-            <td style="color:#1e293b;font-weight:500;">${meals.dn}</td>
+            <td>
+                <div class="week-meal-cell">
+                    <span id="w-bf-${i}">${meals.bf}</span>
+                    <button class="swap-btn-mini" onclick="swapMeal('bf', 'w-bf-${i}')">🔄</button>
+                </div>
+            </td>
+            <td>
+                <div class="week-meal-cell">
+                    <span id="w-lu-${i}">${meals.lu}</span>
+                    <button class="swap-btn-mini" onclick="swapMeal('lu', 'w-lu-${i}')">🔄</button>
+                </div>
+            </td>
+            <td>
+                <div class="week-meal-cell">
+                    <span id="w-sn-${i}">${meals.sn}</span>
+                    <button class="swap-btn-mini" onclick="swapMeal('sn', 'w-sn-${i}')">🔄</button>
+                </div>
+            </td>
+            <td>
+                <div class="week-meal-cell">
+                    <span id="w-dn-${i}">${meals.dn}</span>
+                    <button class="swap-btn-mini" onclick="swapMeal('dn', 'w-dn-${i}')">🔄</button>
+                </div>
+            </td>
             <td style="color:var(--accent2);font-weight:700;">${Math.round(cal)} kcal</td>
         </tr>`;
     }
@@ -281,18 +340,15 @@ function buildWeeklyPlan(cal) {
     </div>`;
 }
 
-// =============================================
-// Nutrient Bar
-// =============================================
 function nutrientBar(name, val, unit, max, color) {
     const pct = Math.min(100, Math.round((val / max) * 100));
     return `<div class="nutrient-item">
         <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
             <span style="font-size:0.85rem;color:var(--text-muted);">${name}</span>
-            <span style="font-size:0.95rem;font-weight:600;color:#fff;">${val}${unit}</span>
+            <span style="font-size:0.95rem;font-weight:700;color:var(--text);">${val}${unit}</span>
         </div>
         <div class="nutrient-bar-bg">
-            <div class="nutrient-bar" style="background:${color};width:${pct}%" data-pct="${pct}"></div>
+            <div class="nutrient-bar" style="background:${color};width:0%" data-pct="${pct}"></div>
         </div>
         <div style="text-align:right;font-size:0.75rem;color:var(--text-dim);margin-top:4px;">${pct}% of target</div>
     </div>`;
@@ -332,16 +388,16 @@ function drawMacroChart(nutrients) {
     // Inner circle (donut hole)
     ctx.beginPath();
     ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-    ctx.fillStyle = '#09090b';
+    ctx.fillStyle = '#ffffff';
     ctx.fill();
 
     // Centre text
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = '#0f172a';
     ctx.textAlign = 'center';
     ctx.font = 'bold 14px Outfit, sans-serif';
     ctx.fillText('Macros', cx, cy - 6);
     ctx.font = '11px Inter, sans-serif';
-    ctx.fillStyle = '#94a3b8';
+    ctx.fillStyle = '#475569';
     ctx.fillText('breakdown', cx, cy + 12);
 }
 
@@ -374,14 +430,14 @@ function drawCalorieChart(cal) {
         ctx.fillStyle = grad;
         ctx.fill();
 
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '10px Inter';
+        ctx.fillStyle = '#64748b';
+        ctx.font = '11px Inter';
         ctx.textAlign = 'center';
         ctx.fillText(days[i], x + barW / 2, H - 6);
 
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 9px Inter';
-        ctx.fillText(v, x + barW / 2, y - 4);
+        ctx.fillStyle = '#1e293b';
+        ctx.font = 'bold 11px Inter';
+        ctx.fillText(v, x + barW / 2, y - 6);
     });
 }
 
@@ -402,6 +458,11 @@ function renderConditionBanners() {
     if (S.conditions.includes('PCOS')) html += `<div class="condition-banner cb-purple"><strong>🔵 PCOS Protocol</strong> — Low GI diet, high fiber, low dairy, anti-inflammatory.</div>`;
     if (S.conditions.includes('IBS')) html += `<div class="condition-banner cb-yellow"><strong>🌀 IBS Protocol</strong> — Low FODMAP diet, avoid trigger foods, small frequent meals.</div>`;
     if (S.conditions.includes('Thyroid Disorder')) html += `<div class="condition-banner cb-green"><strong>🦋 Thyroid Protocol</strong> — Choose selenium-rich foods, limit raw cruciferous vegetables.</div>`;
+    if (S.conditions.includes('GERD')) html += `<div class="condition-banner cb-orange"><strong>🔥 GERD Support</strong> — Avoid caffeine, spicy foods, citric fruits; eat 3h before bed.</div>`;
+    if (S.conditions.includes('Fatty Liver')) html += `<div class="condition-banner cb-green"><strong>🌿 Fatty Liver Support</strong> — Zero alcohol, high antioxidants, weight management, low sugar.</div>`;
+    if (S.conditions.includes('Gout')) html += `<div class="condition-banner cb-red"><strong>⚖️ Gout Management</strong> — Low purine foods, avoid red meat & alcohol, high hydration.</div>`;
+    if (S.conditions.includes('Hypothyroidism')) html += `<div class="condition-banner cb-blue"><strong>🦋 Hypothyroid Support</strong> — Iodine & selenium focus, avoid raw goitrogens (cabbage/kale).</div>`;
+    if (S.conditions.includes('Anaemia')) html += `<div class="condition-banner cb-purple"><strong>🩸 Anaemia Support</strong> — Iron-rich foods ( पालक, dates, seeds), Vitamin C for absorption.</div>`;
     if (!html) html = '<div class="condition-banner cb-green">✅ No chronic conditions — standard nutrient targets applied.</div>';
     document.getElementById('condBanners').innerHTML = html;
 }
@@ -528,6 +589,10 @@ async function renderAll() {
     renderConditionBanners();
     document.getElementById('tab-daily').innerHTML = buildDailyPlan(cal);
     document.getElementById('tab-weekly').innerHTML = buildWeeklyPlan(cal);
+    
+    // Set date for print branding
+    const appEl = document.querySelector('.app');
+    if (appEl) appEl.setAttribute('data-date', new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }));
 
     // Draw charts after content is rendered
     setTimeout(() => {
@@ -553,29 +618,9 @@ function startOver() {
 }
 
 // =============================================
-// Logout
-// =============================================
-function logout() {
-    localStorage.removeItem('healthos_token');
-    localStorage.removeItem('healthos_user');
-    window.location.href = 'login.html';
-}
-
-// =============================================
 // Init
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
     loadApiSettings();
     updateProgress(1);
-
-    const userJson = localStorage.getItem('healthos_user');
-    if (userJson) {
-        try {
-            const user = JSON.parse(userJson);
-            const titleSpan = document.querySelector('h1 span');
-            if (titleSpan) titleSpan.innerHTML = `Smart Meal Planner`;
-            const logoutBtn = document.querySelector('.logout-btn');
-            if (logoutBtn) logoutBtn.textContent = `👤 ${user.name} — Logout`;
-        } catch (e) { }
-    }
 });
